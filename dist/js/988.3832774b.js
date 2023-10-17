@@ -1,0 +1,2 @@
+"use strict";(self["webpackChunkmoodle_super_admin"]=self["webpackChunkmoodle_super_admin"]||[]).push([[988],{3988:function(e,u,n){n.r(u),n.d(u,{default:function(){return t}});var r=function(){var e=this,u=e._self._c;return u("div")},l=[],s={name:"curriculum-exam-schedule-info"},a=s,c=n(1001),i=(0,c.Z)(a,r,l,!1,null,"a1817034",null),t=i.exports}}]);
+//# sourceMappingURL=988.3832774b.js.map

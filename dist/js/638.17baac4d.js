@@ -1,0 +1,2 @@
+"use strict";(self["webpackChunkmoodle_super_admin"]=self["webpackChunkmoodle_super_admin"]||[]).push([[638],{3638:function(e,u,n){n.r(u),n.d(u,{default:function(){return a}});var r=function(){var e=this,u=e._self._c;return u("div")},s=[],l={name:"curriculum-marking-system"},t=l,c=n(1001),i=(0,c.Z)(t,r,s,!1,null,"216e11c6",null),a=i.exports}}]);
+//# sourceMappingURL=638.17baac4d.js.map

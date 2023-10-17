@@ -1,0 +1,2 @@
+"use strict";(self["webpackChunkmoodle_super_admin"]=self["webpackChunkmoodle_super_admin"]||[]).push([[747],{1747:function(e,u,n){n.r(u),n.d(u,{default:function(){return c}});var r=function(){var e=this,u=e._self._c;return u("div")},l=[],s={name:"curriculum-lesson-pair"},i=s,t=n(1001),a=(0,t.Z)(i,r,l,!1,null,"5e2b4674",null),c=a.exports}}]);
+//# sourceMappingURL=747.967d72a4.js.map

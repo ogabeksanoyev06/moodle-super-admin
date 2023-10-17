@@ -1,0 +1,2 @@
+"use strict";(self["webpackChunkmoodle_super_admin"]=self["webpackChunkmoodle_super_admin"]||[]).push([[403],{8403:function(u,e,n){n.r(e),n.d(e,{default:function(){return c}});var r=function(){var u=this,e=u._self._c;return e("div")},a=[],l={name:"curriculum-rating-grade"},t=l,i=n(1001),s=(0,i.Z)(t,r,a,!1,null,"0876a706",null),c=s.exports}}]);
+//# sourceMappingURL=403.64968c9b.js.map

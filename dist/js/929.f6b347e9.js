@@ -1,0 +1,2 @@
+"use strict";(self["webpackChunkmoodle_super_admin"]=self["webpackChunkmoodle_super_admin"]||[]).push([[929],{5929:function(e,n,u){u.r(n),u.d(n,{default:function(){return a}});var r=function(){var e=this,n=e._self._c;return n("div")},l=[],s={name:"AppHome"},t=s,c=u(1001),o=(0,c.Z)(t,r,l,!1,null,"69fc827c",null),a=o.exports}}]);
+//# sourceMappingURL=929.f6b347e9.js.map

@@ -1,118 +1,117 @@
 <template>
   <div class="content">
     <app-loading v-if="loading" />
+    <div v-if="loading" class="progress-bar-wrapper">
+      <div class="progress-bar" :style="'width:' + downloadProgress + '%'">
+        {{ downloadProgress + "%" }}
+      </div>
+    </div>
+    <div v-if="loading">Yuklanmoqda: {{ downloadProgress }}%</div>
     <div class="box">
       <div class="box-body">
         <div class="grid-block-4">
           <div class="small-box item">
             <div class="inner">
-              <p class="">Otm uchun yuklangan shaharlarni yuklash</p>
+              <p class="">Jinsni yuklash</p>
               <div class="icon">
                 <i class="fa fa-users"></i>
               </div>
             </div>
-            <div class="small-box-footer" @click="getOtmCity">
-              <i class="fa fa-arrow-circle-right mr-10"></i>
-              Yuklash
+            <div class="small-box-footer" @click="getGender">
+              <span>
+                <i class="fa fa-arrow-circle-right mr-10"></i> Yuklash
+              </span>
             </div>
           </div>
           <div class="small-box item">
             <div class="inner">
-              <p class="">Otm uchun yuklangan Otm turlari yuklash</p>
+              <p class="">Talaba holati</p>
               <div class="icon">
                 <i class="fa fa-users"></i>
               </div>
             </div>
-            <div class="small-box-footer" @click="getOtmType">
-              <i class="fa fa-arrow-circle-right mr-10"></i>
-              Yuklash
+            <div class="small-box-footer" @click="getStudentStatus">
+              <span>
+                <i class="fa fa-arrow-circle-right mr-10"></i> Yuklash
+              </span>
             </div>
           </div>
           <div class="small-box item">
             <div class="inner">
-              <p class="">Otm uchun yuklangan Otm shaklini yuklash</p>
+              <p class="">to'lov shakli</p>
               <div class="icon">
                 <i class="fa fa-users"></i>
               </div>
             </div>
-            <div class="small-box-footer" @click="getOtmShape">
-              <i class="fa fa-arrow-circle-right mr-10"></i>
-              Yuklash
+            <div class="small-box-footer" @click="getPaymentForm">
+              <span>
+                <i class="fa fa-arrow-circle-right mr-10"></i> Yuklash
+              </span>
             </div>
           </div>
           <div class="small-box item">
             <div class="inner">
-              <p class="">Otm uchun yuklangan Otmni yuklash</p>
+              <p class="">Hudud</p>
               <div class="icon">
                 <i class="fa fa-users"></i>
               </div>
             </div>
-            <div class="small-box-footer" @click="getOtm">
-              <i class="fa fa-arrow-circle-right mr-10"></i>
-              Yuklash
+            <div class="small-box-footer" @click="getState">
+              <span>
+                <i class="fa fa-arrow-circle-right mr-10"></i> Yuklash
+              </span>
             </div>
           </div>
           <div class="small-box item">
             <div class="inner">
-              <p class="">Otm uchun yuklangan Otm bo`limlarini yuklash</p>
+              <p class="">Fuqaroligi</p>
               <div class="icon">
                 <i class="fa fa-users"></i>
               </div>
             </div>
-            <div class="small-box-footer" @click="getOtmSection">
-              <i class="fa fa-arrow-circle-right mr-10"></i>
-              Yuklash
+            <div class="small-box-footer" @click="getCitizenship">
+              <span>
+                <i class="fa fa-arrow-circle-right mr-10"></i> Yuklash
+              </span>
             </div>
           </div>
           <div class="small-box item">
             <div class="inner">
-              <p class="">Otm uchun yuklangan Otm Fakultet turlarini yuklash</p>
+              <p class="">Ijtimoiy kategoriya</p>
               <div class="icon">
                 <i class="fa fa-users"></i>
               </div>
             </div>
-            <div class="small-box-footer" @click="getFacultyType">
-              <i class="fa fa-arrow-circle-right mr-10"></i>
-              Yuklash
+            <div class="small-box-footer" @click="getSocialCategory">
+              <span>
+                <i class="fa fa-arrow-circle-right mr-10"></i> Yuklash
+              </span>
             </div>
           </div>
           <div class="small-box item">
             <div class="inner">
-              <p class="">Otm uchun yuklangan Otm Fakultetlarni yuklash</p>
+              <p class="">turar joy</p>
               <div class="icon">
                 <i class="fa fa-users"></i>
               </div>
             </div>
-            <div class="small-box-footer" @click="getOtmFaculty">
-              <i class="fa fa-arrow-circle-right mr-10"></i>
-              Yuklash
+            <div class="small-box-footer" @click="getAccommodation">
+              <span>
+                <i class="fa fa-arrow-circle-right mr-10"></i> Yuklash
+              </span>
             </div>
           </div>
           <div class="small-box item">
             <div class="inner">
-              <p class="">
-                Otm uchun yuklangan Otm Fakultetga birktrilgan kafedralar
-                yuklash
-              </p>
+              <p class="">Talabalar</p>
               <div class="icon">
                 <i class="fa fa-users"></i>
               </div>
             </div>
-            <div class="small-box-footer" @click="getOtmDepartment">
-              <i class="fa fa-arrow-circle-right mr-10"></i>
-              Yuklash
-            </div>
-          </div>
-          <div class="small-box item">
-            <div class="inner">
-              <p class="">Otm uchun yuklangan O'quv tili</p>
-              <div class="icon">
-                <i class="fa fa-users"></i>
-              </div>
-            </div>
-            <div class="small-box-footer" @click="getOtmDepartment">
-              <i class="fa fa-arrow-circle-right mr-10"></i>
-              Yuklash
+            <div class="small-box-footer" @click="getStudents">
+              <span>
+                <i class="fa fa-arrow-circle-right mr-10"></i> Yuklash
+              </span>
             </div>
           </div>
         </div>
@@ -124,21 +123,22 @@
 <script>
 import AppLoading from "@/components/shared-components/AppLoading.vue";
 export default {
-  name: "hemis-moodle",
+  name: "student-hemis",
   components: { AppLoading },
   data() {
     return {
       loading: false,
+      downloadProgress: 0,
     };
   },
   methods: {
-    getOtmCity() {
+    getGender() {
       this.loading = true;
       this.$http
-        .get(`otmcity/hemis/get`)
+        .get(`state/hemis/get/`)
         .then((res) => {
-          if (res) {
-            this.successNotification(res.succes);
+          if (res.status === 200) {
+            this.successNotification(res.message);
           }
         })
         .catch(() => {})
@@ -146,13 +146,13 @@ export default {
           this.loading = false;
         });
     },
-    getOtmType() {
+    getStudentStatus() {
       this.loading = true;
       this.$http
-        .get(`otmtype/hemis/get`)
+        .get(`student-status/hemis/get/`)
         .then((res) => {
-          if (res) {
-            this.successNotification(res.succes);
+          if (res.status === 200) {
+            this.successNotification(res.message);
           }
         })
         .catch(() => {})
@@ -160,13 +160,13 @@ export default {
           this.loading = false;
         });
     },
-    getOtmShape() {
+    getPaymentForm() {
       this.loading = true;
       this.$http
-        .get(`otmshape/hemis/get`)
+        .get(`payment-form/hemis/get/`)
         .then((res) => {
-          if (res) {
-            this.successNotification(res.succes);
+          if (res.status === 200) {
+            this.successNotification(res.message);
           }
         })
         .catch(() => {})
@@ -174,13 +174,13 @@ export default {
           this.loading = false;
         });
     },
-    getOtm() {
+    getState() {
       this.loading = true;
       this.$http
-        .get(`otm/hemis/get`)
+        .get(`state/hemis/get/`)
         .then((res) => {
-          if (res) {
-            this.successNotification(res.succes);
+          if (res.status === 200) {
+            this.successNotification(res.message);
           }
         })
         .catch(() => {})
@@ -188,13 +188,13 @@ export default {
           this.loading = false;
         });
     },
-    getOtmSection() {
+    getCitizenship() {
       this.loading = true;
       this.$http
-        .get(`otmsection/hemis/get`)
+        .get(`citizenship/hemis/get/`)
         .then((res) => {
-          if (res) {
-            this.successNotification(res.succes);
+          if (res.status === 200) {
+            this.successNotification(res.message);
           }
         })
         .catch(() => {})
@@ -202,13 +202,13 @@ export default {
           this.loading = false;
         });
     },
-    getFacultyType() {
+    getSocialCategory() {
       this.loading = true;
       this.$http
-        .get(`faculty_type/hemis/get`)
+        .get(`social-category/hemis/get/`)
         .then((res) => {
-          if (res) {
-            this.successNotification(res.succes);
+          if (res.status === 200) {
+            this.successNotification(res.message);
           }
         })
         .catch(() => {})
@@ -216,13 +216,13 @@ export default {
           this.loading = false;
         });
     },
-    getOtmFaculty() {
+    getAccommodation() {
       this.loading = true;
       this.$http
-        .get(`otmfaculty/hemis/get`)
+        .get(`accommodation/hemis/get/`)
         .then((res) => {
-          if (res) {
-            this.successNotification(res.succes);
+          if (res.status === 200) {
+            this.successNotification(res.message);
           }
         })
         .catch(() => {})
@@ -230,13 +230,21 @@ export default {
           this.loading = false;
         });
     },
-    getOtmDepartment() {
+    getStudents() {
       this.loading = true;
       this.$http
-        .get(`otmdepartment/hemis/get/`)
+        .get(`students/get/hemis`, {
+          onDownloadProgress: (progressEvent) => {
+            if (progressEvent.lengthComputable) {
+              this.downloadProgress = Math.round(
+                (progressEvent.loaded * 100) / progressEvent.total
+              );
+            }
+          },
+        })
         .then((res) => {
-          if (res) {
-            this.successNotification(res.succes);
+          if (res.status === 200) {
+            this.successNotification(res.message);
           }
         })
         .catch(() => {})
@@ -244,19 +252,10 @@ export default {
           this.loading = false;
         });
     },
-    getScienceBranch() {
-      this.loading = true;
-      this.$http
-        .get(`science_branch/hemis/get/`)
-        .then((res) => {
-          if (res) {
-            this.successNotification(res.succes);
-          }
-        })
-        .catch(() => {})
-        .finally(() => {
-          this.loading = false;
-        });
+  },
+  watch: {
+    progress() {
+      console.log(this.progress);
     },
   },
 };

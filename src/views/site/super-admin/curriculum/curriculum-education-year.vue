@@ -1,17 +1,17 @@
 <template>
   <div class="content">
-    <app-loading v-if="!loading" />
-    <div class="items">
+    <app-loading v-if="loading" />
+    <div class="items" v-else>
       <div class="items-left">
         <div class="box box-default">
           <div class="box-header">
-            <div class="grid-block-2">
+            <!-- <div class="grid-block-2">
               <base-input
                 type="text"
                 vid="Nomi"
                 placeholder="Nom bo‘yicha qidirish"
               />
-            </div>
+            </div> -->
           </div>
           <div class="box-body">
             <div class="table-block">
@@ -26,15 +26,32 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(item, i) in 10" :key="i">
-                    <td style="cursor: pointer">sasasa</td>
-                    <td style="cursor: pointer">fgbgfhfhfghgh</td>
-                    <td>nbnbnbnbnb</td>
-                    <td>,kkiolilgf</td>
-
+                  <tr v-for="(item, i) in educationYear.results" :key="i">
+                    <td
+                      style="cursor: pointer"
+                      @click="educationYearGetId(item.id)"
+                    >
+                      {{ item.name }}
+                    </td>
+                    <td
+                      style="cursor: pointer"
+                      @click="educationYearGetId(item.id)"
+                    >
+                      {{ item.code }}
+                    </td>
+                    <td>{{ item.current ? "Ha" : "Yo`q" }}</td>
+                    <td>
+                      {{
+                        $moment(item.updated_at).format("YYYY-MM-DD h:mm:ss")
+                      }}
+                    </td>
                     <td>
                       <label class="switch">
-                        <input type="checkbox" v-model="item.status" />
+                        <input
+                          type="checkbox"
+                          v-model="item.status_action"
+                          @change="changeStatus(item.id, item)"
+                        />
                         <div class="slider round"></div>
                       </label>
                     </td>
@@ -45,7 +62,14 @@
           </div>
         </div>
         <div class="box-footer">
-          <span class="summary"> 1 - {{ 10 }} / jami {{ 10 }} ta </span>
+          <Pagination
+            :count="pager?.count"
+            :page_count="pager?.page_count"
+            :current_page="pager?.current_page"
+            @changePage="handlePageChange"
+            @prevPage="handlePrevPage"
+            @nextPage="handleNextPage"
+          />
         </div>
       </div>
       <div class="items-right">
@@ -58,20 +82,17 @@
                   label="O'quv yili"
                   vid="O'quv yili"
                   rules="required"
-                  :options-prop="faculty"
                   placeholder="O'quv yilini tanlang"
-                  v-model="education_year_value"
-                  @itemSelected="facultyType"
+                  v-model="educationYearValue"
+                  :optionsProp="educationYear.results"
                 />
                 <base-select
                   type="text"
                   label="Semestr turi"
                   vid="Semestr turi"
                   rules="required"
-                  :options-prop="faculty"
                   placeholder="Semestr turi tanlang"
-                  v-model="educationyear_semestr_value"
-                  @itemSelected="facultyType"
+                  v-model="educationyearSemestrValue"
                 />
                 <div class="form-group">
                   <input type="checkbox" id="checkbox" v-model="isChecked" />
@@ -96,6 +117,7 @@
                     class="mr-5"
                     radius="5"
                     height="40"
+                    @click="clear"
                   >
                     Bekor
                   </app-button>
@@ -106,6 +128,7 @@
                     class="mr-5"
                     radius="5"
                     height="40"
+                    disabled
                   >
                     O'chirish
                   </app-button>
@@ -134,32 +157,37 @@
 import AppLoading from "@/components/shared-components/AppLoading.vue";
 import { ValidationObserver } from "vee-validate";
 import AppButton from "@/components/shared-components/AppButton.vue";
-import BaseInput from "@/components/shared-components/BaseInput.vue";
 import BaseSelect from "@/components/shared-components/BaseSelect.vue";
+import { mapActions, mapGetters } from "vuex";
+import Pagination from "@/components/shared-components/Pagination.vue";
 
 export default {
   components: {
     AppLoading,
     ValidationObserver,
     AppButton,
-    BaseInput,
     BaseSelect,
+    Pagination,
   },
   name: "curriculum-education-year",
   data() {
     return {
-      loading: true,
+      loading: false,
       showSelectYear: false,
       showSelectSemestr: false,
-      education_year_value: "",
-      educationyear_semestr_value: "",
+      educationYearValue: "",
+      educationyearSemestrValue: "",
       isChecked: false,
+      pager: {
+        count: null,
+        page_count: null,
+        current_page: 1,
+      },
     };
   },
   methods: {
-    toggleCheckbox() {
-      this.isChecked = !this.isChecked;
-    },
+    ...mapActions(["getEducationYear"]),
+
     hideSelectDropdownYear() {
       this.showSelectYear = false;
     },
@@ -172,7 +200,85 @@ export default {
     curriculumYearSemestr(item) {
       this.educationyear_semestr_value = item;
     },
-  
+    educationYearGetId(id) {
+      this.loading = true;
+      this.$http
+        .get(`educationyear/get/${id}`)
+        .then((res) => {
+          if (res.name) {
+            this.educationYearValue = res.name;
+            this.educationyearSemestrValue = res.id;
+          } else {
+            this.errorNotification(res.error);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    changeStatus(id, item) {
+      this.$http
+        .patch(`educationyear/update/${id}`, {
+          status_action: item.status_action,
+          code: item.code,
+          name: item.name,
+          current: item.current,
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((error) => {
+          this.errorNotification(error.response.data.code[0]);
+        });
+    },
+    educationYearUpdate(id) {
+      this.loading = true;
+      this.$http
+        .get(`educationyear/update/${id}`, {
+          status_action: true,
+          code: "string",
+          name: "string",
+          current: true,
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    clear() {
+      (this.educationYearValue = ""), (this.educationyearSemestrValue = "");
+    },
+    handlePageChange(page) {
+      this.pager.current_page = page;
+      this.getEducationYear({ number: this.pager.current_page });
+    },
+    handlePrevPage(page) {
+      this.pager.current_page = page - 1;
+      this.getEducationYear({ number: this.pager.current_page });
+    },
+    handleNextPage(page) {
+      this.pager.current_page = page + 1;
+      this.getEducationYear({ number: this.pager.current_page });
+    },
+  },
+  computed: {
+    ...mapGetters(["educationYear"]),
+  },
+  async mounted() {
+    await this.getEducationYear({ number: this.pager.current_page });
+    this.pager = {
+      count: this.educationYear?.count,
+      page_count: this.educationYear?.page_count,
+      current_page: 1,
+    };
   },
 };
 </script>

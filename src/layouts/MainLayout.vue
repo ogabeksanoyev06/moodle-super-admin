@@ -1,6 +1,5 @@
 <template>
   <div>
-    <pre-loading v-if="loading" />
     <div class="page__wrap-header" :class="isSadibar ? '' : 'active'">
       <AppHeader />
     </div>
@@ -82,7 +81,6 @@
         </div>
       </div>
     </div>
-    <notifications group="admin" position="top right" :width="350" />
   </div>
 </template>
 
@@ -91,14 +89,13 @@ import TokenService from "../service/TokenService";
 import { mapGetters, mapMutations } from "vuex";
 import AppHeader from "@/components/layouts/default/header/AppHeader.vue";
 import "./MainLayout.scss";
-import PreLoading from "@/components/shared-components/PreLoading.vue";
 
 export default {
   name: "MainLayout",
-  components: { AppHeader, PreLoading },
+  components: { AppHeader },
   data() {
     return {
-      loading: true,
+      loading: false,
       isSadibar: true,
       visible: false,
       openedId: null,
@@ -130,11 +127,6 @@ export default {
               id: 11,
               link: "structure-department",
             },
-            // {
-            //   title: "Bo'lim",
-            //   id: 12,
-            //   link: "structure-section",
-            // },
           ],
         },
         {
@@ -245,6 +237,11 @@ export default {
               id: 9,
               link: "curriculum-hemis",
             },
+            {
+              title: "Talaba va boshqa ma'lumorlarni yuklash",
+              id: 9,
+              link: "student-hemis",
+            },
           ],
         },
       ],
@@ -324,11 +321,6 @@ export default {
             this.visible = false;
           }
         }
-      });
-    });
-    setTimeout(() => {
-      this.$nextTick(() => {
-        this.loading = false;
       });
     });
   },

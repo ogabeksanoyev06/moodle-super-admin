@@ -1,10 +1,14 @@
 <template>
-  <div class="preloader">
-    <div class="preloader-content">
-      <div class="loader loader--fade">
-        <span class="loader-item">1</span> <span class="loader-item">2</span>
-        <span class="loader-item">3</span> <span class="loader-item">4</span>
-      </div>
+  <div class="loader">
+    <div class="lds-roller">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
     </div>
   </div>
 </template>
@@ -14,72 +18,100 @@ export default {
 };
 </script>
 <style>
-.preloader {
-  background: linear-gradient(0deg, #f2f4f6, #f2f4f6),
-    linear-gradient(0deg, #f9f9f9, #f9f9f9), #fff;
+.loader {
   position: fixed;
+  z-index: 2000;
+  background-color: hsla(0, 0%, 100%, 0.9);
+  top: 0%;
+  left: 0%;
   width: 100%;
   height: 100%;
-  left: 0;
-  top: 0;
-  z-index: 9999;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.loader {
-  display: block;
-  overflow: hidden;
-  margin-bottom: 20px;
-  font-size: 0;
-}
-.loader-item {
+.lds-roller {
   display: inline-block;
-  width: 15px;
-  height: 15px;
-  margin-left: 2.5px;
-  margin-right: 2.5px;
-  background-color: #00598f;
-  color: #00598f;
-  -webkit-animation-duration: 4s;
-  animation-duration: 4s;
-  -webkit-animation-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);
-  animation-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);
-  -webkit-animation-iteration-count: infinite;
-  animation-iteration-count: infinite;
+  position: relative;
+  width: 80px;
+  height: 80px;
 }
-.loader--fade .loader-item {
-  -webkit-animation-name: fade;
-  animation-name: fade;
-  -webkit-animation-duration: 1s;
-  animation-duration: 1s;
+.lds-roller div {
+  animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  transform-origin: 40px 40px;
 }
-
-.loader-item:nth-child(2) {
-  -webkit-animation-delay: 0.2s;
-  animation-delay: 0.2s;
+.lds-roller div:after {
+  content: " ";
+  display: block;
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #0152da;
+  margin: -4px 0 0 -4px;
 }
-.loader-item:first-child {
-  -webkit-animation-delay: 0.1s;
-  animation-delay: 0.1s;
+.lds-roller div:nth-child(1) {
+  animation-delay: -0.036s;
 }
-.loader-item:nth-child(3) {
-  -webkit-animation-delay: 0.3s;
-  animation-delay: 0.3s;
+.lds-roller div:nth-child(1):after {
+  top: 63px;
+  left: 63px;
 }
-.loader-item:nth-child(4) {
-  -webkit-animation-delay: 0.4s;
-  animation-delay: 0.4s;
+.lds-roller div:nth-child(2) {
+  animation-delay: -0.072s;
 }
-@keyframes fade {
+.lds-roller div:nth-child(2):after {
+  top: 68px;
+  left: 56px;
+}
+.lds-roller div:nth-child(3) {
+  animation-delay: -0.108s;
+}
+.lds-roller div:nth-child(3):after {
+  top: 71px;
+  left: 48px;
+}
+.lds-roller div:nth-child(4) {
+  animation-delay: -0.144s;
+}
+.lds-roller div:nth-child(4):after {
+  top: 72px;
+  left: 40px;
+}
+.lds-roller div:nth-child(5) {
+  animation-delay: -0.18s;
+}
+.lds-roller div:nth-child(5):after {
+  top: 71px;
+  left: 32px;
+}
+.lds-roller div:nth-child(6) {
+  animation-delay: -0.216s;
+}
+.lds-roller div:nth-child(6):after {
+  top: 68px;
+  left: 24px;
+}
+.lds-roller div:nth-child(7) {
+  animation-delay: -0.252s;
+}
+.lds-roller div:nth-child(7):after {
+  top: 63px;
+  left: 17px;
+}
+.lds-roller div:nth-child(8) {
+  animation-delay: -0.288s;
+}
+.lds-roller div:nth-child(8):after {
+  top: 56px;
+  left: 12px;
+}
+@keyframes lds-roller {
   0% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
+    transform: rotate(0deg);
   }
   100% {
-    opacity: 0;
+    transform: rotate(360deg);
   }
 }
 </style>

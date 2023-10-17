@@ -5,13 +5,13 @@
       <div class="items-left">
         <div class="box box-default">
           <div class="box-header">
-            <div class="grid-block-2">
+            <!-- <div class="grid-block-2">
               <base-input
                 type="text"
                 vid="Nomi"
                 placeholder="Nom bo‘yicha qidirish"
               />
-            </div>
+            </div> -->
           </div>
           <div class="box-body">
             <div class="table-block">
@@ -25,7 +25,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(item, i) in department" :key="i">
+                  <tr v-for="(item, i) in department.results" :key="i">
                     <td
                       @click="departmentGetId(item.id)"
                       style="cursor: pointer"
@@ -56,9 +56,16 @@
           </div>
         </div>
         <div class="box-footer">
-          <span class="summary">
-            1 - {{ department.length }} / jami {{ department.length }} ta
-          </span>
+          <Pagination
+            :count="pager?.count"
+            :page_count="pager?.page_count"
+            :current_page="pager?.current_page"
+            :next="pager?.next"
+            :previous="pager?.previous"
+            @changePage="handlePageChange"
+            @prevPage="handlePrevPage"
+            @nextPage="handleNextPage"
+          />
         </div>
       </div>
       <div class="items-right">
@@ -72,9 +79,8 @@
                   vid="Fakultet"
                   rules="required"
                   placeholder="Fakultetni tanlang"
-                  :options-prop="faculty"
-                  v-model="department_type_update.faculty"
-                  @itemSelected="facultyType"
+                  :options-prop="faculties.results"
+                  v-model="departmentTypeUpdate.faculty"
                 />
                 <base-input
                   type="text"
@@ -82,7 +88,7 @@
                   rules="required"
                   label="Nomi º"
                   placeholder="Nomi"
-                  v-model="department_type_update.name"
+                  v-model="departmentTypeUpdate.name"
                 />
                 <base-input
                   type="text"
@@ -91,7 +97,7 @@
                   label="Kod"
                   placeholder="Kod"
                   v-mask="'336-101-##'"
-                  v-model="department_type_update.kod"
+                  v-model="departmentTypeUpdate.kod"
                 />
 
                 <div
@@ -117,6 +123,7 @@
                     radius="5"
                     height="40"
                     @click="departmentDelete(department_id)"
+                    disabled
                   >
                     O'chirish
                   </app-button>
@@ -136,39 +143,6 @@
             </ValidationObserver>
           </div>
         </div>
-        <div class="box">
-          <div class="box-body">
-            <div class="table-block">
-              <table class="table">
-                <tbody>
-                  <tr>
-                    <td>Ma'lumot sarlavhasi</td>
-                    <td>Moliya fakulteti</td>
-                  </tr>
-                  <tr>
-                    <td>Sinxronizatsiya statusi</td>
-                    <td>Aktual</td>
-                  </tr>
-                  <tr>
-                    <td>Sinxronlash sanasi</td>
-                    <td>15.08.2023 09:00:06</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="box-footer mla">
-              <app-button
-                theme="transparent"
-                :font-size="isMobile ? 14 : 16"
-                :sides="isMobile ? 10 : 20"
-                radius="5"
-                height="40"
-              >
-                Ma'lumotlarni tekshirish
-              </app-button>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -177,10 +151,11 @@
 <script>
 import { ValidationObserver } from "vee-validate";
 import AppButton from "@/components/shared-components/AppButton.vue";
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 import AppLoading from "@/components/shared-components/AppLoading.vue";
 import BaseInput from "@/components/shared-components/BaseInput.vue";
 import BaseSelect from "@/components/shared-components/BaseSelect.vue";
+import Pagination from "@/components/shared-components/Pagination.vue";
 
 export default {
   name: "structure-department",
@@ -190,47 +165,33 @@ export default {
     AppLoading,
     BaseInput,
     BaseSelect,
+    Pagination,
   },
   data() {
     return {
-      options: [
-        {
-          value: "Option1",
-          label: "Option1",
-        },
-        {
-          value: "Option2",
-          label: "Option2",
-        },
-        {
-          value: "Option3",
-          label: "Option3",
-        },
-
-        {
-          value: "Option5",
-          label: "Option5",
-        },
-      ],
-      loading: true,
+      loading: false,
       showSelect: false,
       filterSelect: false,
       filterValue: "",
       checkbox: true,
       department_id: "",
-      department: [],
-      department_type_update: {
+      departmentTypeUpdate: {
         faculty: "",
         name: "",
         kod: "",
       },
+      pager: {
+        count: null,
+        page_count: null,
+        current_page: 1,
+      },
     };
   },
   methods: {
-    ...mapActions(["getFaculty"]),
+    ...mapActions(["getFaculty", "getDeparments"]),
     facultyId(item) {
       this.showSelect = false;
-      this.department_type_update.faculty = item.name;
+      this.departmentTypeUpdate.faculty = item.name;
     },
     filterFaculty(item) {
       this.filterSelect = false;
@@ -247,34 +208,19 @@ export default {
     toggleFilterSelect() {
       this.filterSelect = !this.filterSelect;
     },
-    getDepartment() {
-      this.loading = true;
-      this.$http
-        .get(`department`)
-        .then((res) => {
-          this.department = res;
-          this.successNotification("Ma'lumotlar muvaffaqiyatli olingan!");
-        })
-        .finally(() => {
-          this.loading = false;
-        })
-        .catch(() => {
-          this.loading = false;
-        });
-    },
+
     departmentGetId(id) {
       this.loading = true;
       this.$http
         .get(`department/get/${id}`)
         .then((res) => {
-          this.department_type_update.faculty = res.faculty;
-          this.department_type_update.name = res.name;
-          this.department_type_update.kod = res.kod;
+          console.log(res);
+          this.departmentTypeUpdate.faculty = res.faculty.name;
+          this.departmentTypeUpdate.name = res.name;
+          this.departmentTypeUpdate.kod = res.kod;
           this.department_id = res.id;
         })
-        .catch(() => {
-          this.loading = false;
-        })
+        .catch(() => {})
         .finally(() => {
           this.loading = false;
         });
@@ -286,9 +232,9 @@ export default {
         })
         .then((res) => {
           this.successNotification(res.xabar);
-          this.department_type_update.faculty = "";
-          this.department_type_update.name = "";
-          this.department_type_update.kod = "";
+          this.departmentTypeUpdate.faculty = "";
+          this.departmentTypeUpdate.name = "";
+          this.departmentTypeUpdate.kod = "";
           this.department_id = "";
           this.getDepartment();
         })
@@ -301,19 +247,38 @@ export default {
       console.log("aaa");
     },
     clear() {
-      this.department_type_update.faculty = "";
-      this.department_type_update.name = "";
-      this.department_type_update.kod = "";
+      this.departmentTypeUpdate.faculty = "";
+      this.departmentTypeUpdate.name = "";
+      this.departmentTypeUpdate.kod = "";
       this.department_id = "";
+    },
+    handlePageChange(page) {
+      this.pager.current_page = page;
+      this.getDeparments({ number: this.pager.current_page });
+    },
+    handlePrevPage(page) {
+      this.pager.current_page = page - 1;
+      this.getDeparments({ number: this.pager.current_page });
+    },
+    handleNextPage(page) {
+      this.pager.current_page = page + 1;
+      this.getDeparments({ number: this.pager.current_page });
     },
   },
   computed: {
-    ...mapGetters(["faculty"]),
+    ...mapGetters(["faculties", "department"]),
+    ...mapState([]),
   },
-  mounted() {
-    this.getDepartment();
+  async mounted() {
+    await this.getDeparments({ number: this.pager.current_page });
+    this.pager = {
+      count: this.department?.count,
+      page_count: this.department?.page_count,
+      current_page: 1,
+    };
     this.getFaculty();
   },
+  created() {},
 };
 </script>
 

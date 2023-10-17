@@ -84,9 +84,6 @@
                 <div class="account__photo">
                   <img src="/images/account.png" alt="" />
                 </div>
-                <!-- <div class="m_photo">
-                  <i class="fa fa-camera"></i>
-                </div> -->
               </div>
             </div>
             <div class="box__footer">

@@ -21,56 +21,56 @@
             <tbody>
               <tr>
                 <th>Kod</th>
-                <td>{{ res?.kod }}</td>
+                <td>{{ otm.kod }}</td>
               </tr>
               <tr>
                 <th>Nomi º</th>
-                <td>{{ res?.name }}</td>
+                <td>{{ otm.name }}</td>
               </tr>
               <tr>
                 <th>Hudud</th>
-                <td>{{ res?.city?.name }}</td>
+                <td>{{ otm.city.name }}</td>
               </tr>
               <tr>
                 <th>Shahar º</th>
-                <td>{{ res?.area_located }}</td>
+                <td>{{ otm.area_located }}</td>
               </tr>
               <tr>
                 <th>STIR</th>
-                <td>{{ res?.stir }}</td>
+                <td>{{ otm.stir }}</td>
               </tr>
               <tr>
                 <th>Kontakt</th>
-                <td>{{ res?.phone }}</td>
+                <td>{{ otm.phone }}</td>
               </tr>
               <tr>
                 <th>Rektor</th>
-                <td>{{ res?.rektor }}</td>
+                <td>{{ otm.rektor }}</td>
               </tr>
               <tr>
                 <th>OTM turi</th>
-                <td>{{ res?.ownership?.name }}</td>
+                <td>{{ otm.ownership.name }}</td>
               </tr>
               <tr>
                 <th>OTM shakli</th>
-                <td>{{ res?.universityForm?.name }}</td>
+                <td>{{ otm.universityForm?.name }}</td>
               </tr>
               <tr>
                 <th>Pochta manzili º</th>
                 <td>
-                  {{ res?.address }}
+                  {{ otm.address }}
                 </td>
               </tr>
               <tr>
                 <th>Bank ma'lumotlari</th>
                 <td>
-                  {{ res?.bank_info }}
+                  {{ otm.bank_info }}
                 </td>
               </tr>
               <tr>
                 <th>Akkreditasiya ma'lumotlari º</th>
                 <td>
-                  {{ res?.akkreditasiya_info }}
+                  {{ otm.akkreditasiya_info }}
                 </td>
               </tr>
             </tbody>
@@ -89,7 +89,38 @@ export default {
   components: { AppButton, AppLoading },
   data() {
     return {
-      res: {},
+      otm: {
+        id: "",
+        city: {
+          id: "",
+          name: "Toshkent shahri",
+          code: "1726",
+          parent: "1726",
+          status_action: true,
+        },
+        ownership: {
+          id: "",
+          name: "Davlat",
+          code: "11",
+          status_action: true,
+        },
+        universityForm: {
+          id: "",
+          name: "Institut",
+          code: "13",
+          status_action: true,
+        },
+        kod: "336",
+        name: "Toshkent moliya instituti",
+        area_located: "Toshkent",
+        phone: "+998712345334",
+        stir: "201221691",
+        rektor: null,
+        address: "",
+        bank_info: "",
+        akkreditasiya_info: null,
+        status_action: true,
+      },
       loading: false,
     };
   },
@@ -99,17 +130,14 @@ export default {
       this.$http
         .get(`otm`)
         .then((res) => {
+          this.otm = {};
           if (res.status_action) {
-            this.res = res;
+            this.otm = res;
             this.successNotification("Ma'lumotlar muvaffaqiyatli olingan!");
-          } else {
-            this.errorNotification("Noto'g'ri javob ma'lumotlari.");
           }
         })
+        .catch(() => {})
         .finally(() => {
-          this.loading = false;
-        })
-        .catch(() => {
           this.loading = false;
         });
     },
@@ -135,5 +163,8 @@ export default {
 }
 .box-body {
   padding: 10px;
+}
+.table-block table tbody tr th {
+  text-align: left;
 }
 </style>

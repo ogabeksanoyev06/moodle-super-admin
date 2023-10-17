@@ -7,7 +7,7 @@
           <div class="box-body">
             <base-input
               type="text"
-              vid="name"
+              vid="Kod"
               rules="required"
               label="Kod"
               placeholder="OTM kod"
@@ -16,7 +16,7 @@
             />
             <base-input
               type="text"
-              vid="name"
+              vid="Nomi"
               rules="required"
               label="Nomi º"
               placeholder="Nomi"
@@ -25,7 +25,7 @@
             <div class="grid-block-2">
               <base-input
                 type="text"
-                vid="name"
+                vid="Kontakt"
                 v-mask="'+998#########'"
                 rules="required"
                 label="Kontakt"
@@ -34,7 +34,7 @@
               />
               <base-input
                 type="text"
-                vid="name"
+                vid="STIR"
                 v-mask="'############'"
                 rules="required"
                 label="STIR"
@@ -44,7 +44,7 @@
             </div>
             <base-input
               type="text"
-              vid="name"
+              vid="Hudud"
               rules="required"
               label="Hudud"
               placeholder="Hudud"
@@ -52,7 +52,7 @@
             />
             <base-input
               type="text"
-              vid="name"
+              vid="Shahar"
               rules="required"
               label="Shahar º"
               placeholder="Shahar"
@@ -60,7 +60,7 @@
             />
             <base-input
               type="text"
-              vid="name"
+              vid="OtmTuri"
               rules="required"
               label="OTM turi"
               placeholder="OTM turi"
@@ -68,7 +68,7 @@
             />
             <base-input
               type="text"
-              vid="name"
+              vid="OtmShakli"
               rules="required"
               label="OTM shakli"
               placeholder="OTM shakli"
@@ -77,7 +77,7 @@
             />
             <base-text-area
               type="text"
-              vid="name"
+              vid="Email"
               rules="required"
               rows="4"
               label="Pochta manzili º"
@@ -85,7 +85,7 @@
             />
             <base-text-area
               type="text"
-              vid="name"
+              vid="Bank"
               rules="required"
               rows="7"
               label="Bank ma'lumotlari"
@@ -93,7 +93,7 @@
             />
             <base-text-area
               type="text"
-              vid="name"
+              vid="Akkreditasiya"
               rules="required"
               rows="3"
               label="Akkreditasiya ma'lumotlari º"
@@ -130,7 +130,7 @@ import BaseInput from "@/components/shared-components/BaseInput.vue";
 import BaseTextArea from "@/components/shared-components/BaseTextArea.vue";
 
 export default {
-  name: "structure-university",
+  name: "structure-university-update",
   components: {
     ValidationObserver,
     AppButton,
@@ -140,43 +140,19 @@ export default {
   },
   data() {
     return {
-      otmcity: {
-        kod: "",
-        name: "",
-        area_located: "",
-        phone: "",
-        stir: "",
-        rektor: "",
-        address: "",
-        bank_info: "",
-        akkreditasiya_info: "",
-        city: null,
-        ownership: null,
-        universityForm: null,
-      },
-      loading: true,
+      otmcity: {},
+      loading: false,
       id: null,
-      res: {},
     };
   },
   methods: {
-    getOTM() {
+    async getOTM() {
       this.loading = true;
-      this.$http
+      await this.$http
         .get(`otm`)
         .then((res) => {
-          if (res?.status_action) {
-            this.otmcity.kod = res?.kod;
-            this.otmcity.name = res?.name;
-            this.otmcity.phone = res?.phone;
-            this.otmcity.stir = res?.stir;
-            this.otmcity.city = res?.city;
-            this.otmcity.area_located = res?.area_located;
-            this.otmcity.ownership = res?.ownership;
-            this.otmcity.universityForm = res?.universityForm;
-            this.otmcity.address = res?.address;
-            this.otmcity.bank_info = res?.bank_info;
-            this.otmcity.akkreditasiya_info = res?.akkreditasiya_info;
+          if (res.status_action) {
+            this.otmcity = res;
             this.id = res.id;
             this.successNotification("Ma'lumotlar muvaffaqiyatli olingan!");
           } else {
@@ -184,15 +160,13 @@ export default {
             this.loading = false;
           }
         })
+        .catch(() => {})
         .finally(() => {
-          this.loading = false;
-        })
-        .catch(() => {
           this.loading = false;
         });
     },
-    updateOTM() {
-      this.$http
+    async updateOTM() {
+      await this.$http
         .patch(`otm/update/${this.id}`, {
           kod: this.otmcity.kod,
           name: this.otmcity.name,
@@ -228,10 +202,10 @@ export default {
         });
     },
   },
-  mounted() {
+  mounted() {},
+  created() {
     this.getOTM();
   },
-  created() {},
 };
 </script>
 

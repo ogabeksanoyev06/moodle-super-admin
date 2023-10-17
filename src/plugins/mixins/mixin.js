@@ -1,11 +1,11 @@
 import Vue from "vue";
 import { mapGetters } from "vuex";
-import { baseURL } from "../../service/apiService";
+import { baseURLHemis } from "../axios";
 
 Vue.mixin({
   data() {
     return {
-      baseURL,
+      baseURLHemis,
     };
   },
   computed: {

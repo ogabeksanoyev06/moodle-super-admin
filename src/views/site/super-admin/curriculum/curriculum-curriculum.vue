@@ -1,5 +1,6 @@
 <template>
   <div class="content">
+    <app-loading v-if="loading" />
     <div class="box">
       <div class="box-header">
         <div>
@@ -19,20 +20,18 @@
           <base-select
             type="text"
             vid="Fakultet"
-            :options-prop="faculty"
             placeholder="O'quv yilini tanlang"
             v-model="year_value"
-            @itemSelected="facultyType"
+            :optionsProp="educationYear"
           />
         </div>
         <div>
           <base-select
             type="text"
             vid="Fakultet"
-            :options-prop="faculty"
             placeholder="Fakultetni tanlang"
             v-model="faculty_value"
-            @itemSelected="facultyType"
+            :optionsProp="faculty"
           />
         </div>
         <div>
@@ -57,15 +56,17 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(item, i) in 10" :key="i">
+              <tr v-for="(item, i) in curriculum" :key="i">
                 <td style="cursor: pointer; color: #2c6082">
-                  Investitsion loyihalarga xizmat ko'rsatish va moliyalashtirish
-                  (2020-2021)
-                  <p class="text-muted">Bank ishi va auditi</p>
+                  {{ item.name }}
+                  <p class="text-muted">Fakultetttttttt</p>
                 </td>
                 <td>
-                  Budjet hisobi va g'aznachilik fakulteti
-                  <p class="text-muted">Bakalavr / Kredit baholash tizimi</p>
+                  Fakultetttttttt
+                  <p class="text-muted">
+                    {{ item.educationtype.name }} /
+                    {{ item.markingsystem.name }}
+                  </p>
                 </td>
                 <td class="">
                   <a class="label label-success">
@@ -114,9 +115,11 @@
 import AppButton from "@/components/shared-components/AppButton.vue";
 import BaseSelect from "@/components/shared-components/BaseSelect.vue";
 import BaseInput from "@/components/shared-components/BaseInput.vue";
+import AppLoading from "@/components/shared-components/AppLoading.vue";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
-  components: { AppButton, BaseSelect, BaseInput },
+  components: { AppButton, BaseSelect, BaseInput, AppLoading },
   name: "curriculum-curriculum",
   data() {
     return {
@@ -125,9 +128,12 @@ export default {
       year_value: "",
       faculty_value: "",
       search_value: "",
+      curriculum: [],
+      loading: false,
     };
   },
   methods: {
+    ...mapActions(["getEducationYear", "getFaculty"]),
     hideSelectDropdownYear() {
       this.showSelectYear = false;
     },
@@ -140,6 +146,28 @@ export default {
     curriculumFaculty(item) {
       this.faculty_value = item;
     },
+    getCurriculum() {
+      this.loading = true;
+      this.$http
+        .get("curriculum")
+        .then((res) => {
+          this.curriculum = res.results;
+        })
+        .catch(() => {
+          this.loading = false;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+  },
+  computed: {
+    ...mapGetters(["educationYear", "faculty"]),
+  },
+  mounted() {
+    this.getCurriculum();
+    this.getEducationYear();
+    this.getFaculty();
   },
 };
 </script>

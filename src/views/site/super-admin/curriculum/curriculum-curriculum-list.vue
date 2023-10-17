@@ -104,6 +104,7 @@
 <script>
 import BaseSelect from "@/components/shared-components/BaseSelect.vue";
 import BaseInput from "@/components/shared-components/BaseInput.vue";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "curriculum-curriculum-list",
   components: { BaseSelect, BaseInput },
@@ -117,6 +118,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["getFaculty"]),
     hideSelectDropdownYear() {
       this.showSelectYear = false;
     },
@@ -129,6 +131,12 @@ export default {
     curriculumFaculty(item) {
       this.faculty_value = item;
     },
+  },
+  computed: {
+    ...mapGetters(["faculty"]),
+  },
+  mounted() {
+    this.getFaculty();
   },
 };
 </script>

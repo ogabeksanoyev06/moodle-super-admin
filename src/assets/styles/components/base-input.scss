@@ -55,12 +55,10 @@
     z-index: 1;
     display: flex;
     align-items: center;
+    transition: all 0.3s ease-in-out;
 
-    & + .input__block-input {
-    }
-    .fa {
-      font-size: 20px;
-      color: #ced4da;
+    &.active {
+      transform: translateY(-50%) rotate(180deg);
     }
   }
   &-input {

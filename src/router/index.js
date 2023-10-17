@@ -23,6 +23,14 @@ const routes = [
           ),
       },
       {
+        path: "structure/update",
+        name: "structure-university-update",
+        component: () =>
+          import(
+            "../views/site/super-admin/structure/structure-university-update.vue"
+          ),
+      },
+      {
         path: "structure/faculty",
         name: "structure-faculty",
         component: () =>
@@ -34,20 +42,6 @@ const routes = [
         component: () =>
           import(
             "../views/site/super-admin/structure/structure-department.vue"
-          ),
-      },
-      {
-        path: "structure/section",
-        name: "structure-section",
-        component: () =>
-          import("../views/site/super-admin/structure/structure-section.vue"),
-      },
-      {
-        path: "structure/university-update",
-        name: "structure-university-update",
-        component: () =>
-          import(
-            "../views/site/super-admin/structure/structure-university-update.vue"
           ),
       },
       // curriculum
@@ -180,15 +174,6 @@ const routes = [
           ),
       },
 
-      // transfer
-      {
-        path: "transfer/subject-register",
-        name: "transfer-subject-register",
-        component: () =>
-          import(
-            "../views/site/super-admin/transfer/transfer-subject-register.vue"
-          ),
-      },
       // hemis-struktura
       {
         path: "hemis-baza",
@@ -200,6 +185,12 @@ const routes = [
         name: "curriculum-hemis",
         component: () =>
           import("../views/site/super-admin/hemis/curriculum-hemis.vue"),
+      },
+      {
+        path: "student-hemis",
+        name: "student-hemis",
+        component: () =>
+          import("../views/site/super-admin/hemis/student-hemis.vue"),
       },
       // dashboadr
       {

@@ -5,6 +5,7 @@ import store from "./store";
 import AppText from "./components/shared-components/AppText";
 import VueMask from "v-mask";
 import Toast from "vue-toastification";
+import Moment from "vue-moment";
 import "vue-toastification/dist/index.css";
 import "./assets/styles/main.scss";
 import "./plugins/media/media-mixin";
@@ -17,6 +18,7 @@ Vue.config.productionTip = false;
 Vue.component("AppText", AppText);
 Vue.use(VueMask);
 Vue.use(Toast);
+Vue.use(Moment);
 Vue.prototype.$http = http;
 
 new Vue({

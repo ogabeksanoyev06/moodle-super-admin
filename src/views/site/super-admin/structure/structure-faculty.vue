@@ -16,14 +16,14 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(item, i) in faculty" :key="i">
+                  <tr v-for="(item, i) in faculties.results" :key="i">
                     <td @click="facultyGetId(item.id)" style="cursor: pointer">
                       {{ item.kod }}
                     </td>
                     <td @click="facultyGetId(item.id)" style="cursor: pointer">
                       {{ item.name }}
                     </td>
-                    <td>Mahalliy</td>
+                    <td>{{ item.faculty_type.name }}</td>
                     <td>
                       <label class="switch">
                         <input
@@ -40,7 +40,14 @@
             </div>
           </div>
           <div class="box-footer">
-            <span class="summary">1-12 / jami 12 ta</span>
+            <Pagination
+              :count="pager?.count"
+              :page_count="pager?.page_count"
+              :current_page="pager?.current_page"
+              @changePage="handlePageChange"
+              @prevPage="handlePrevPage"
+              @nextPage="handleNextPage"
+            />
           </div>
         </div>
       </div>
@@ -55,7 +62,7 @@
                   rules="required"
                   label="Nomi º"
                   placeholder="Nomi"
-                  v-model="faculty_type_update.name"
+                  v-model="facultyTypeUpdate.name"
                 />
                 <base-input
                   type="text"
@@ -64,7 +71,7 @@
                   label="Kod"
                   placeholder="Kod"
                   v-mask="'336-1##'"
-                  v-model="faculty_type_update.kod"
+                  v-model="facultyTypeUpdate.kod"
                 />
                 <base-select
                   type="text"
@@ -73,7 +80,7 @@
                   rules="required"
                   placeholder="Turini tanlang"
                   :options-prop="faculty_type"
-                  v-model="faculty_type_update.type"
+                  v-model="facultyTypeUpdate.type"
                   @itemSelected="facultyType"
                 />
                 <div
@@ -99,6 +106,7 @@
                     radius="5"
                     height="40"
                     @click="facultyDelete(faculty_id)"
+                    disabled
                   >
                     O'chirish
                   </app-button>
@@ -118,39 +126,6 @@
             </ValidationObserver>
           </div>
         </div>
-        <div class="box">
-          <div class="box-body">
-            <div class="table-block">
-              <table class="table">
-                <tbody>
-                  <tr>
-                    <td>Ma'lumot sarlavhasi</td>
-                    <td>Moliya fakulteti</td>
-                  </tr>
-                  <tr>
-                    <td>Sinxronizatsiya statusi</td>
-                    <td>Aktual</td>
-                  </tr>
-                  <tr>
-                    <td>Sinxronlash sanasi</td>
-                    <td>15.08.2023 09:00:06</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="box-footer mla">
-              <app-button
-                theme="transparent"
-                :font-size="isMobile ? 14 : 16"
-                :sides="isMobile ? 10 : 20"
-                radius="5"
-                height="40"
-              >
-                Ma'lumotlarni tekshirish
-              </app-button>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -160,9 +135,10 @@
 import { ValidationObserver } from "vee-validate";
 import AppButton from "@/components/shared-components/AppButton.vue";
 import AppLoading from "@/components/shared-components/AppLoading.vue";
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 import BaseInput from "@/components/shared-components/BaseInput.vue";
 import BaseSelect from "@/components/shared-components/BaseSelect.vue";
+import Pagination from "@/components/shared-components/Pagination.vue";
 
 export default {
   name: "structure-faculty",
@@ -172,90 +148,42 @@ export default {
     AppLoading,
     BaseInput,
     BaseSelect,
+    Pagination,
   },
   data() {
     return {
-      options: [
-        {
-          value: "Option1",
-          label: "Option1",
-        },
-        {
-          value: "Option2",
-          label: "Option2",
-        },
-        {
-          value: "Option3",
-          label: "Option3",
-        },
-
-        {
-          value: "Option5",
-          label: "Option5",
-        },
-      ],
       showSelect: false,
       checkbox: true,
-      faculty: [],
-      loading: true,
-      faculty_type_id: "",
-      faculty_id: "",
-      faculty_type_update: {
+      loading: false,
+      facultyTypeId: "",
+      facultyId: "",
+      facultyTypeUpdate: {
         name: "",
         kod: "",
         type: "",
       },
       dropdownVisible: false,
+      pager: {
+        count: null,
+        page_count: null,
+        current_page: 1,
+      },
     };
   },
   methods: {
-    ...mapActions(["getFacultyType"]),
-    facultyTypew(id) {
-      console.log(id);
-    },
-    facultyType(item) {
-      this.dropdownVisible = false;
-      this.faculty_type_update.type = item.name;
-      this.faculty_type_id = item.id;
-    },
-    hideSelectDropdown() {
-      this.showSelect = false;
-    },
-
-    toggleCheckbox() {
-      this.checkbox = !this.checkbox;
-      this.$emit("setCheckboxVal", this.checkbox);
-    },
-    getFaculty() {
-      this.loading = true;
-      this.$http
-        .get(`faculty`)
-        .then((res) => {
-          this.faculty = res;
-          this.successNotification("Ma'lumotlar muvaffaqiyatli olingan!");
-        })
-        .finally(() => {
-          this.loading = false;
-        })
-        .catch(() => {
-          // let errorMessage = "Ma'lumotlarni olishda xatolik yuz berdi.";
-          this.loading = false;
-        });
-    },
+    ...mapActions(["getFaculty", "getFacultyType"]),
     facultyGetId(id) {
-      console.log(id);
       this.loading = true;
       this.$http
         .get(`faculty/get/${id}`)
         .then((res) => {
-          this.faculty_type_update.type = res.faculty_type.name;
-          this.faculty_type_update.name = res.name;
-          this.faculty_type_update.kod = res.kod;
-          this.faculty_id = res.id;
+          console.log(res);
+          this.facultyTypeUpdate.type = res.faculty_type.name;
+          this.facultyTypeUpdate.name = res.name;
+          this.facultyTypeUpdate.kod = res.kod;
+          this.facultyId = res.id;
         })
-        .catch(() => {
-          this.loading = false;
-        })
+        .catch(() => {})
         .finally(() => {
           this.loading = false;
         });
@@ -267,32 +195,78 @@ export default {
         })
         .then((res) => {
           this.successNotification(res.xabar);
-          this.faculty_type_update.type = "";
-          this.faculty_type_update.name = "";
-          this.faculty_type_update.kod = "";
-          this.faculty_id = "";
+          this.facultyTypeUpdate.type = "";
+          this.facultyTypeUpdate.name = "";
+          this.facultyTypeUpdate.kod = "";
+          this.facultyId = "";
           this.getFaculty();
         })
-        .finally(() => {})
         .catch((error) => {
-          this.errorNotification(error.response.data.id);
-        });
-    },
-    clear() {
-      this.faculty_type_update.type = "";
-      this.faculty_type_update.name = "";
-      this.faculty_type_update.kod = "";
-      this.faculty_id = "";
+          this.errorNotification(error);
+        })
+        .finally(() => {});
     },
     facultyUpdate() {
-      console.log("aa");
+      this.$http
+        .post(`faculty/delete/${this.facultyId}`, {
+          name: this.facultyTypeUpdate.name,
+          faculty_type: this.facultyTypeUpdate.type,
+        })
+        .then((res) => {
+          this.successNotification(res.xabar);
+          this.facultyTypeUpdate.type = "";
+          this.facultyTypeUpdate.name = "";
+          this.facultyTypeUpdate.kod = "";
+          this.facultyId = "";
+          this.getFaculty();
+        })
+        .catch((error) => {
+          this.errorNotification(error);
+        })
+        .finally(() => {});
+    },
+    facultyType(item) {
+      this.dropdownVisible = false;
+      this.facultyTypeUpdate.type = item.name;
+      this.facultyTypeId = item.id;
+    },
+    hideSelectDropdown() {
+      this.showSelect = false;
+    },
+    toggleCheckbox() {
+      this.checkbox = !this.checkbox;
+      this.$emit("setCheckboxVal", this.checkbox);
+    },
+    clear() {
+      this.facultyTypeUpdate.type = "";
+      this.facultyTypeUpdate.name = "";
+      this.facultyTypeUpdate.kod = "";
+      this.facultyId = "";
+    },
+    handlePageChange(page) {
+      this.pager.current_page = page;
+      this.getFaculty({ number: this.pager.current_page });
+    },
+    handlePrevPage(page) {
+      this.pager.current_page = page - 1;
+      this.getFaculty({ number: this.pager.current_page });
+    },
+    handleNextPage(page) {
+      this.pager.current_page = page + 1;
+      this.getFaculty({ number: this.pager.current_page });
     },
   },
   computed: {
-    ...mapGetters(["faculty_type"]),
+    ...mapGetters(["faculties", "faculty_type"]),
+    ...mapState([]),
   },
-  mounted() {
-    this.getFaculty();
+  async mounted() {
+    await this.getFaculty({ number: this.pager.current_page });
+    this.pager = {
+      count: this.faculties?.count,
+      page_count: this.faculties?.page_count,
+      current_page: 1,
+    };
     this.getFacultyType();
   },
 };

@@ -2,15 +2,19 @@ const state = {
   windowWidth: null,
   loading: false,
   faculty_type: [],
-  faculty: [],
+  faculties: {},
+  department: {},
+  educationYear: {},
   refreshTokenIntervalId: null,
 };
 
 const getters = {
   windowWidth: (state) => state.windowWidth,
   loading: (state) => state.loading,
+  faculties: (state) => state.faculties,
+  department: (state) => state.department,
   faculty_type: (state) => state.faculty_type,
-  faculty: (state) => state.faculty,
+  educationYear: (state) => state.educationYear,
 };
 
 const mutations = {
@@ -18,23 +22,74 @@ const mutations = {
     state.windowWidth = newWidth;
   },
   setFaculty_type: (state, data) => (state.faculty_type = data),
-  setFaculty: (state, data) => (state.faculty = data),
+  setFaculty: (state, data) => (state.faculties = data),
+  setDepartment: (state, data) => (state.department = data),
+  setEducationYear: (state, data) => (state.educationYear = data),
   setLoading: (state, data) => (state.loading = data),
 };
 const actions = {
   getFacultyType({ commit }) {
     this._vm.$http.get("faculty_type").then((res) => {
       if (res) {
-        commit("setFaculty_type", res);
+        commit("setFaculty_type", res.results);
       }
     });
   },
-  getFaculty({ commit }) {
-    this._vm.$http.get("faculty").then((res) => {
-      if (res) {
-        commit("setFaculty", res);
+  async getFaculty({ commit }, payload) {
+    await this._vm.$http
+      .get(
+        `faculty${payload ? `/?limit=10&page_number=${payload.number}` : ""}`
+      )
+      .then((res) => {
+        if (res && res.results) {
+          const responseData = {
+            count: res.count,
+            page_count: res.page_count,
+            next: res.next,
+            previous: res.previous,
+            results: res.results,
+          };
+          commit("setFaculty", responseData);
+        }
+      });
+  },
+  async getDeparments({ commit }, payload) {
+    await this._vm.$http
+      .get(
+        `department${payload ? `/?limit=10&page_number=${payload.number}` : ""}`
+      )
+      .then((res) => {
+        if (res && res.results) {
+          const responseData = {
+            count: res.count,
+            page_count: res.page_count,
+            next: res.next,
+            previous: res.previous,
+            results: res.results,
+          };
+          commit("setDepartment", responseData);
+        }
+      });
+  },
+  async getEducationYear({ commit }, payload) {
+    try {
+      const endpoint = `educationyear${
+        payload ? `/?limit=10&page_number=${payload.number}` : ""
+      }`;
+      const res = await this._vm.$http.get(endpoint);
+      if (res && res.results) {
+        const responseData = {
+          count: res.count,
+          page_count: res.page_count,
+          next: res.next,
+          previous: res.previous,
+          results: res.results,
+        };
+        commit("setEducationYear", responseData);
       }
-    });
+    } catch (error) {
+      //
+    }
   },
 };
 

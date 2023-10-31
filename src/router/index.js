@@ -173,7 +173,19 @@ const routes = [
             "../views/site/super-admin/curriculum/curriculum-curriculum-edit.vue"
           ),
       },
-
+      // students
+      {
+        path: "student/student",
+        name: "student-student",
+        component: () =>
+          import("../views//site/super-admin/students/student.vue"),
+      },
+      {
+        path: "student/student-contingent",
+        name: "student-student-contingent",
+        component: () =>
+          import("../views//site/super-admin/students/student-contingent.vue"),
+      },
       // hemis-struktura
       {
         path: "hemis-baza",

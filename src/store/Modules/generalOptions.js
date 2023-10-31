@@ -36,45 +36,37 @@ const actions = {
     });
   },
   async getFaculty({ commit }, payload) {
-    await this._vm.$http
-      .get(
-        `faculty${payload ? `/?limit=10&page_number=${payload.number}` : ""}`
-      )
-      .then((res) => {
-        if (res && res.results) {
-          const responseData = {
-            count: res.count,
-            page_count: res.page_count,
-            next: res.next,
-            previous: res.previous,
-            results: res.results,
-          };
-          commit("setFaculty", responseData);
-        }
-      });
+    await this._vm.$http.get(`faculty/?limit=${payload}`).then((res) => {
+      if (res && res.results) {
+        const responseData = {
+          count: res.count,
+          page_count: res.page_count,
+          next: res.next,
+          previous: res.previous,
+          results: res.results,
+        };
+        commit("setFaculty", responseData);
+      }
+    });
   },
   async getDeparments({ commit }, payload) {
-    await this._vm.$http
-      .get(
-        `department${payload ? `/?limit=10&page_number=${payload.number}` : ""}`
-      )
-      .then((res) => {
-        if (res && res.results) {
-          const responseData = {
-            count: res.count,
-            page_count: res.page_count,
-            next: res.next,
-            previous: res.previous,
-            results: res.results,
-          };
-          commit("setDepartment", responseData);
-        }
-      });
+    await this._vm.$http.get(`department/?limit=${payload}`).then((res) => {
+      if (res && res.results) {
+        const responseData = {
+          count: res.count,
+          page_count: res.page_count,
+          next: res.next,
+          previous: res.previous,
+          results: res.results,
+        };
+        commit("setDepartment", responseData);
+      }
+    });
   },
   async getEducationYear({ commit }, payload) {
     try {
       const endpoint = `educationyear${
-        payload ? `/?limit=10&page_number=${payload.number}` : ""
+        payload ? `/?limit=20&page_number=${payload.number}` : ""
       }`;
       const res = await this._vm.$http.get(endpoint);
       if (res && res.results) {

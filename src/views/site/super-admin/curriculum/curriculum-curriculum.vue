@@ -2,7 +2,7 @@
   <div class="content">
     <app-loading v-if="loading" />
     <div class="box">
-      <div class="box-header">
+      <div class="box-header greyBg">
         <div>
           <app-button
             theme="secondary"
@@ -23,6 +23,7 @@
             placeholder="O'quv yilini tanlang"
             v-model="year_value"
             :optionsProp="educationYear"
+            :hideDetails="true"
           />
         </div>
         <div>
@@ -31,6 +32,7 @@
             vid="Fakultet"
             placeholder="Fakultetni tanlang"
             v-model="faculty_value"
+            :hideDetails="true"
             :optionsProp="faculty"
           />
         </div>
@@ -39,6 +41,7 @@
             type="text"
             vid="Nomi"
             placeholder="O'quv reja Nomi bo'yicha qidirish"
+            :hideDetails="true"
             v-model="search_value"
           />
         </div>
@@ -91,16 +94,10 @@
                   </a>
                 </td>
                 <td>
-                  <label class="switch">
-                    <input type="checkbox" v-model="item.status" />
-                    <div class="slider round"></div>
-                  </label>
+                  <base-checkbox v-model="item.status_action" />
                 </td>
                 <td>
-                  <label class="switch">
-                    <input type="checkbox" v-model="item.status" />
-                    <div class="slider round"></div>
-                  </label>
+                  <base-checkbox v-model="item.status_action" />
                 </td>
               </tr>
             </tbody>
@@ -117,9 +114,10 @@ import BaseSelect from "@/components/shared-components/BaseSelect.vue";
 import BaseInput from "@/components/shared-components/BaseInput.vue";
 import AppLoading from "@/components/shared-components/AppLoading.vue";
 import { mapActions, mapGetters } from "vuex";
+import BaseCheckbox from "@/components/shared-components/BaseCheckbox.vue";
 
 export default {
-  components: { AppButton, BaseSelect, BaseInput, AppLoading },
+  components: { AppButton, BaseSelect, BaseInput, AppLoading, BaseCheckbox },
   name: "curriculum-curriculum",
   data() {
     return {
@@ -196,26 +194,23 @@ export default {
     margin-right: 3px;
   }
 }
-.box {
-  position: relative;
-  border-radius: 3px;
-  background-color: #fff !important;
-  border-top: 3px solid #40d88a;
-  margin-bottom: 20px;
-  width: 100%;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-}
 .box-header {
-  background-color: #f3f3f3 !important;
-  padding: 20px 10px;
   display: grid;
   grid-template-columns: 2fr 2fr 4fr 4fr;
-  gap: 15px;
+  gap: 10px;
 }
-@media (max-width: 1024px) {
+@media (max-width: 991px) {
   .box-header {
-    padding: 20px 0px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+}
+@media (max-width: 768px) {
+  .box-header {
+    display: grid;
     grid-template-columns: 1fr;
+    gap: 10px;
   }
 }
 </style>

@@ -1,17 +1,17 @@
 <template>
   <div class="content">
     <app-loading v-if="loading" />
-    <div class="items" v-else>
-      <div class="items-left">
+    <div class="items-grid" v-else>
+      <div class="items-grid-left">
         <div class="box box-default">
-          <div class="box-header">
-            <!-- <div class="grid-block-2">
+          <div class="box-header greyBg">
+            <div class="grid-block-2">
               <base-input
                 type="text"
-                vid="Nomi"
                 placeholder="Nom bo‘yicha qidirish"
+                :hideDetails="true"
               />
-            </div> -->
+            </div>
           </div>
           <div class="box-body">
             <div class="table-block">
@@ -46,33 +46,26 @@
                       }}
                     </td>
                     <td>
-                      <label class="switch">
-                        <input
-                          type="checkbox"
-                          v-model="item.status_action"
-                          @change="changeStatus(item.id, item)"
-                        />
-                        <div class="slider round"></div>
-                      </label>
+                      <base-checkbox v-model="item.status_action" />
                     </td>
                   </tr>
                 </tbody>
               </table>
             </div>
           </div>
-        </div>
-        <div class="box-footer">
-          <Pagination
-            :count="pager?.count"
-            :page_count="pager?.page_count"
-            :current_page="pager?.current_page"
-            @changePage="handlePageChange"
-            @prevPage="handlePrevPage"
-            @nextPage="handleNextPage"
-          />
+          <div class="box-footer">
+            <Pagination
+              :count="pager?.count"
+              :page_count="pager?.page_count"
+              :current_page="pager?.current_page"
+              @changePage="handlePageChange"
+              @prevPage="handlePrevPage"
+              @nextPage="handleNextPage"
+            />
+          </div>
         </div>
       </div>
-      <div class="items-right">
+      <div class="items-grid-right">
         <div class="box">
           <div class="box-body">
             <ValidationObserver v-slot="{ handleSubmit }">
@@ -160,6 +153,8 @@ import AppButton from "@/components/shared-components/AppButton.vue";
 import BaseSelect from "@/components/shared-components/BaseSelect.vue";
 import { mapActions, mapGetters } from "vuex";
 import Pagination from "@/components/shared-components/Pagination.vue";
+import BaseInput from "@/components/shared-components/BaseInput.vue";
+import BaseCheckbox from "@/components/shared-components/BaseCheckbox.vue";
 
 export default {
   components: {
@@ -168,6 +163,8 @@ export default {
     AppButton,
     BaseSelect,
     Pagination,
+    BaseInput,
+    BaseCheckbox,
   },
   name: "curriculum-education-year",
   data() {
@@ -284,55 +281,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.box {
-  position: relative;
-  border-radius: 3px;
-  background-color: #f3f3f3 !important;
-  border-top: 3px solid #40d88a;
-  margin-bottom: 20px;
-  width: 100%;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-  padding: 10px;
+.items-grid {
+  display: grid;
+  grid-template-columns: 8fr 4fr;
+  gap: 20px;
 }
-.box-footer {
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 3px;
-  border-bottom-left-radius: 3px;
-  border-top: 1px solid #f4f4f4;
-  padding: 10px;
-  width: fit-content;
-}
-.box-header {
-  padding: 10px 0;
-}
-.items {
-  display: flex;
-  width: 100%;
-  &-left {
-    max-width: 65%;
-    width: 100%;
-    padding-right: 40px;
-  }
-  &-right {
-    max-width: 35%;
-    width: 100%;
-  }
-}
-
 @media (max-width: 991px) {
-  .items {
-    flex-direction: column;
-    &-left {
-      max-width: 100%;
-      width: 100%;
-      padding-right: 0px;
-    }
-
-    &-right {
-      max-width: 100%;
-      width: 100%;
-    }
+  .items-grid {
+    grid-template-columns: 1fr;
   }
 }
 </style>

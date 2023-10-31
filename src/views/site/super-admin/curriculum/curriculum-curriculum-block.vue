@@ -128,25 +128,11 @@ export default {
     hideSelectDropdown2() {
       this.showSelect2 = false;
     },
-  
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.box {
-  position: relative;
-  border-radius: 3px;
-  background: #ffffff;
-  border-top: 3px solid #40d88a;
-  margin-bottom: 20px;
-  width: 100%;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-}
-.box-header {
-  background: #f3f3f3 !important;
-  padding: 20px 10px;
-}
 .items {
   display: flex;
   width: 100%;

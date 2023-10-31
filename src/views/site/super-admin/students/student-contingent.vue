@@ -1,11 +1,8 @@
 <template>
   <div></div>
 </template>
-
 <script>
 export default {
-  name: "curriculum-lesson-paire",
+  name: "StudentContingent",
 };
 </script>
-
-<style lang="scss" scoped></style>

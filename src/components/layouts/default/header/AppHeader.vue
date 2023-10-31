@@ -1,79 +1,65 @@
 <template>
-  <div>
-    <header class="header">
-      <div class="container">
-        <div class="header__inner">
-          <div class="header__right">
-            <div
-              class="header__language"
+  <header class="header">
+    <div class="logo" to="/">
+      <span class="logo-lg">LMS tizimi</span>
+    </div>
+    <div class="container" style="flex: 1">
+      <nav class="navbar navbar-nav">
+        <div class="sidebar-toggle" @click="toggleSidebar">
+          <a><i class="fa fa-bars"></i></a>
+        </div>
+        <div class="navbar-custom-menu">
+          <ul class="nav">
+            <li
+              class="nav-item"
+              v-if="!isMobileMedium"
               @click="languageDropdown = !languageDropdown"
               v-on-click-outside:excludedClass="hideLanguageDropdown"
             >
-              <span>O'zbekcha</span>
-              <div class="header__dropdown-language">
-                <ul
-                  class="header__dropdown-language-wrap"
-                  :class="languageDropdown ? 'active' : ''"
-                >
-                  <li class="header__dropdown-language-item">
-                    <span> O'zbekcha </span>
-                  </li>
-                  <li class="header__dropdown-language-item">
-                    <span> Russian </span>
-                  </li>
-                  <li class="header__dropdown-language-item">
-                    <span> English </span>
-                  </li>
+              <a class="dropdown-toggle"> O‘zbekcha </a>
+              <transition name="slide" v-if="languageDropdown">
+                <ul class="dropdown-menu">
+                  <li class="dropdown-menu-item"><span> O‘zbekcha </span></li>
+                  <li class="dropdown-menu-item"><span> Ўзбекча </span></li>
+                  <li class="dropdown-menu-item"><span> Русский </span></li>
+                  <li class="dropdown-menu-item"><span> English </span></li>
                 </ul>
-              </div>
-            </div>
-            <div
-              class="header__account"
-              @click="accountDropdown = !accountDropdown"
-              v-on-click-outside:excludedClass="hideAccountDropdown"
-            >
-              <!-- <div class="header__account-photo" v-if="user && user.photo">
-                <img :src="baseURL + user.photo" alt="" />
-              </div> -->
-              <div class="header__account-photo">
-                <img src="/images/user.png" alt="" />
+              </transition>
+            </li>
+            <li class="nav-item" v-if="!isMobileSmall">
+              <a><i class="fa fa-refresh"></i></a>
+            </li>
+            <li class="nav-item user-menu">
+              <a class="dropdown-toggle">
+                <img
+                  src="https://hemis.tfi.uz/static/crop/3/8/120_120_90_3846030520.jpg"
+                  class="user-image"
+                  v-if="!isMobileMedium"
+                />
                 <div>
-                  <span class="user-name">Anvar Egamberdiyev</span>
+                  <span class="user-name">JASURBEK SAYFIYEV</span>
                   <span class="user-role">Super Administrator</span>
                 </div>
-              </div>
-              <div class="header__dropdown-user">
-                <ul
-                  class="header__dropdown-user-wrap"
-                  :class="accountDropdown ? 'active' : ''"
-                >
-                  <li class="header__dropdown-user-header">
-                    Foydalanuvchi rollari
-                  </li>
-                  <li class="divider"></li>
-
-                  <li class="header__dropdown-user-item">
-                    <router-link
-                      :to="{ name: 'dashboard-profile' }"
-                      class="header__dropdown-user-link"
-                    >
-                      <span>Super Administrator</span>
-                    </router-link>
-                  </li>
-                  <li class="header__dropdown-user-item logout">
-                    <div class="header__dropdown-user-link">
-                      <img src="/icons/logout.svg" alt="" class="mr-10" />
-                      <span>Chiqish</span>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
+              </a>
+              <ul class="dropdown-menu" style="display: none">
+                <li class="dropdown-menu-item">
+                  <span>Super Administrator</span>
+                </li>
+                <li class="divider"></li>
+                <li class="dropdown-menu-item">
+                  <span>Profil</span>
+                </li>
+                <li class="divider"></li>
+                <li class="dropdown-menu-item">
+                  <span><i class="fa fa-sign-out"></i> Chiqish</span>
+                </li>
+              </ul>
+            </li>
+          </ul>
         </div>
-      </div>
-    </header>
-  </div>
+      </nav>
+    </div>
+  </header>
 </template>
 <script>
 import "./header.scss";
@@ -83,7 +69,7 @@ export default {
   components: {},
   data() {
     return {
-      isActive: true,
+      isSadibar: false,
       languageDropdown: false,
       accountDropdown: false,
       setLang: "O‘zbekcha",
@@ -107,9 +93,13 @@ export default {
         this.setLang = "O'zbek";
       }
     },
-    clickMenu() {
-      this.isActive = !this.isActive;
-      this.$emit("closeNavigationDrawer");
+    toggleSidebar() {
+      this.isSadibar = !this.isSadibar;
+      if (this.isSadibar) {
+        document.body.classList.add("sidebar-collapse");
+      } else {
+        document.body.classList.remove("sidebar-collapse");
+      }
     },
     hideUserDropdown() {
       this.userDropdown = false;

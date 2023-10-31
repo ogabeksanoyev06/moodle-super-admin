@@ -1,9 +1,9 @@
 <template>
   <div class="content">
     <app-loading v-if="loading" />
-    <div class="items" v-else>
-      <div class="items-left">
-        <div class="box box-default">
+    <div class="items-grid">
+      <div class="items-grid-left">
+        <div class="box">
           <div class="box-body">
             <div class="table-block">
               <table class="table">
@@ -25,33 +25,16 @@
                     </td>
                     <td>{{ item.faculty_type.name }}</td>
                     <td>
-                      <label class="switch">
-                        <input
-                          type="checkbox"
-                          v-model="item.status"
-                          @click="toggleCheckbox(i)"
-                        />
-                        <div class="slider round"></div>
-                      </label>
+                      <base-checkbox v-model="item.status" />
                     </td>
                   </tr>
                 </tbody>
               </table>
             </div>
           </div>
-          <div class="box-footer">
-            <Pagination
-              :count="pager?.count"
-              :page_count="pager?.page_count"
-              :current_page="pager?.current_page"
-              @changePage="handlePageChange"
-              @prevPage="handlePrevPage"
-              @nextPage="handleNextPage"
-            />
-          </div>
         </div>
       </div>
-      <div class="items-right">
+      <div class="items-grid-right">
         <div class="box">
           <div class="box-body pa-10">
             <ValidationObserver v-slot="{ handleSubmit }">
@@ -138,7 +121,7 @@ import AppLoading from "@/components/shared-components/AppLoading.vue";
 import { mapActions, mapGetters, mapState } from "vuex";
 import BaseInput from "@/components/shared-components/BaseInput.vue";
 import BaseSelect from "@/components/shared-components/BaseSelect.vue";
-import Pagination from "@/components/shared-components/Pagination.vue";
+import BaseCheckbox from "@/components/shared-components/BaseCheckbox.vue";
 
 export default {
   name: "structure-faculty",
@@ -148,7 +131,7 @@ export default {
     AppLoading,
     BaseInput,
     BaseSelect,
-    Pagination,
+    BaseCheckbox,
   },
   data() {
     return {
@@ -157,27 +140,25 @@ export default {
       loading: false,
       facultyTypeId: "",
       facultyId: "",
+      getFacultyId: null,
       facultyTypeUpdate: {
         name: "",
         kod: "",
         type: "",
       },
       dropdownVisible: false,
-      pager: {
-        count: null,
-        page_count: null,
-        current_page: 1,
-      },
+      count: null,
     };
   },
   methods: {
     ...mapActions(["getFaculty", "getFacultyType"]),
+
     facultyGetId(id) {
       this.loading = true;
       this.$http
         .get(`faculty/get/${id}`)
         .then((res) => {
-          console.log(res);
+          this.getFacultyId = res;
           this.facultyTypeUpdate.type = res.faculty_type.name;
           this.facultyTypeUpdate.name = res.name;
           this.facultyTypeUpdate.kod = res.kod;
@@ -208,17 +189,18 @@ export default {
     },
     facultyUpdate() {
       this.$http
-        .post(`faculty/delete/${this.facultyId}`, {
-          name: this.facultyTypeUpdate.name,
-          faculty_type: this.facultyTypeUpdate.type,
-        })
+        .patch(`faculty/update/${this.facultyId}`)
         .then((res) => {
-          this.successNotification(res.xabar);
-          this.facultyTypeUpdate.type = "";
-          this.facultyTypeUpdate.name = "";
-          this.facultyTypeUpdate.kod = "";
-          this.facultyId = "";
-          this.getFaculty();
+          if (res) {
+            this.successNotification(res.xabar);
+            this.facultyTypeUpdate.type = "";
+            this.facultyTypeUpdate.name = "";
+            this.facultyTypeUpdate.kod = "";
+            this.facultyId = "";
+            this.getFaculty();
+          } else {
+            this.errorNotification("error");
+          }
         })
         .catch((error) => {
           this.errorNotification(error);
@@ -243,82 +225,33 @@ export default {
       this.facultyTypeUpdate.kod = "";
       this.facultyId = "";
     },
-    handlePageChange(page) {
-      this.pager.current_page = page;
-      this.getFaculty({ number: this.pager.current_page });
-    },
-    handlePrevPage(page) {
-      this.pager.current_page = page - 1;
-      this.getFaculty({ number: this.pager.current_page });
-    },
-    handleNextPage(page) {
-      this.pager.current_page = page + 1;
-      this.getFaculty({ number: this.pager.current_page });
-    },
   },
   computed: {
     ...mapGetters(["faculties", "faculty_type"]),
     ...mapState([]),
   },
-  async mounted() {
-    await this.getFaculty({ number: this.pager.current_page });
-    this.pager = {
-      count: this.faculties?.count,
-      page_count: this.faculties?.page_count,
-      current_page: 1,
-    };
-    this.getFacultyType();
+  mounted() {},
+  watch: {
+    count() {
+      this.getFaculty(this.count);
+    },
+  },
+  async created() {
+    await this.getFaculty();
+    this.count = this.faculties.count;
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.box-body {
-  position: relative;
-  border-radius: 3px;
-  background: #ffffff;
-  border-top: 3px solid #40d88a;
-  margin-bottom: 20px;
-  width: 100%;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-}
-.box-footer {
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 3px;
-  border-bottom-left-radius: 3px;
-  border-top: 1px solid #f4f4f4;
-  padding: 10px;
-  background-color: #fff;
-  width: fit-content;
-}
-
-.items {
-  display: flex;
-  width: 100%;
-  &-left {
-    max-width: 65%;
-    width: 100%;
-    padding-right: 40px;
-  }
-  &-right {
-    max-width: 35%;
-    width: 100%;
-  }
+.items-grid {
+  display: grid;
+  grid-template-columns: 8fr 4fr;
+  gap: 20px;
 }
 @media (max-width: 991px) {
-  .items {
-    flex-direction: column;
-    &-left {
-      max-width: 100%;
-      width: 100%;
-      padding-right: 0px;
-    }
-
-    &-right {
-      max-width: 100%;
-      width: 100%;
-    }
+  .items-grid {
+    grid-template-columns: 1fr;
   }
 }
 </style>

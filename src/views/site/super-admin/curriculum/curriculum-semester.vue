@@ -63,16 +63,10 @@
                   12.10.2020 - 27.02.2021
                 </td>
                 <td>
-                  <label class="switch">
-                    <input type="checkbox" v-model="item.status" />
-                    <div class="slider round"></div>
-                  </label>
+                  <base-checkbox v-model="item.status_action" />
                 </td>
                 <td>
-                  <label class="switch">
-                    <input type="checkbox" v-model="item.status" />
-                    <div class="slider round"></div>
-                  </label>
+                  <base-checkbox v-model="item.status_action" />
                 </td>
               </tr>
             </tbody>
@@ -87,9 +81,10 @@
 import AppButton from "@/components/shared-components/AppButton.vue";
 import BaseSelect from "@/components/shared-components/BaseSelect.vue";
 import BaseInput from "@/components/shared-components/BaseInput.vue";
+import BaseCheckbox from "@/components/shared-components/BaseCheckbox.vue";
 export default {
   name: "curriculum-semester",
-  components: { AppButton, BaseSelect, BaseInput },
+  components: { AppButton, BaseSelect, BaseInput, BaseCheckbox },
   data() {
     return {
       showSelectYear: false,
@@ -112,54 +107,23 @@ export default {
     curriculumFaculty(item) {
       this.faculty_value = item;
     },
- 
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.label-success {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.5em 0.6em;
-  font-size: 75%;
-  font-weight: 700;
-  line-height: 1;
-  color: #fff;
-  text-align: center;
-  vertical-align: baseline;
-  border-radius: 0.25em;
-  background-color: #40d88a !important;
-  margin-right: 5px;
-  margin-bottom: 5px;
-  cursor: pointer;
-  &:last-child {
-    margin-bottom: 0;
-    margin-right: 0;
-  }
-  .fa {
-    margin-right: 3px;
-  }
-}
-.box {
-  position: relative;
-  border-radius: 3px;
-  background-color: #fff !important;
-  border-top: 3px solid #40d88a;
-  margin-bottom: 20px;
-  width: 100%;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-}
 .box-header {
-  background-color: #f3f3f3 !important;
-  padding: 20px 10px;
   display: grid;
   grid-template-columns: 2fr 4fr 6fr;
   gap: 15px;
 }
-@media (max-width: 1024px) {
+@media (max-width: 991px) {
   .box-header {
-    padding: 20px 0px;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 768px) {
+  .box-header {
     grid-template-columns: 1fr;
   }
 }

@@ -1,8 +1,8 @@
 <template>
   <section class="content">
     <app-loading v-if="loading" />
-    <div class="box box-default" v-else>
-      <div class="box-header">
+    <div class="box" v-else>
+      <div class="box-header greyBg">
         <AppButton
           theme="secondary"
           @click="$router.push({ name: 'structure-university-update' })"
@@ -17,7 +17,7 @@
       </div>
       <div class="box-body">
         <div class="table-block">
-          <table class="">
+          <table>
             <tbody>
               <tr>
                 <th>Kod</th>
@@ -29,7 +29,7 @@
               </tr>
               <tr>
                 <th>Hudud</th>
-                <td>{{ otm.city.name }}</td>
+                <td>{{ otm.city?.name }}</td>
               </tr>
               <tr>
                 <th>Shahar º</th>
@@ -49,7 +49,7 @@
               </tr>
               <tr>
                 <th>OTM turi</th>
-                <td>{{ otm.ownership.name }}</td>
+                <td>{{ otm.ownership?.name }}</td>
               </tr>
               <tr>
                 <th>OTM shakli</th>
@@ -90,31 +90,15 @@ export default {
   data() {
     return {
       otm: {
-        id: "",
-        city: {
-          id: "",
-          name: "Toshkent shahri",
-          code: "1726",
-          parent: "1726",
-          status_action: true,
-        },
-        ownership: {
-          id: "",
-          name: "Davlat",
-          code: "11",
-          status_action: true,
-        },
-        universityForm: {
-          id: "",
-          name: "Institut",
-          code: "13",
-          status_action: true,
-        },
-        kod: "336",
-        name: "Toshkent moliya instituti",
-        area_located: "Toshkent",
-        phone: "+998712345334",
-        stir: "201221691",
+        id: null,
+        city: null,
+        ownership: null,
+        universityForm: null,
+        kod: null,
+        name: "",
+        area_located: "",
+        phone: "",
+        stir: "",
         rektor: null,
         address: "",
         bank_info: "",
@@ -148,23 +132,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.box {
-  position: relative;
-  border-radius: 5px;
-  background-color: #fff;
-  border-top: 3px solid #40d88a;
-  margin-bottom: 20px;
-  width: 100%;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-}
-.box-header {
-  padding: 20px 10px;
-}
-.box-body {
-  padding: 10px;
-}
-.table-block table tbody tr th {
-  text-align: left;
-}
-</style>
+<style lang="scss" scoped></style>

@@ -94,7 +94,7 @@ export default {
     }
   }
   .btn {
-    font-family: "Montserrat", sans-serif;
+    font-family: "Manrope", sans-serif;
   }
 }
 </style>

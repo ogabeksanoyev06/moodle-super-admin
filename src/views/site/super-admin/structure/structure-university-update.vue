@@ -100,19 +100,17 @@
               v-model="otmcity.akkreditasiya_info"
             />
             <div class="box-footer">
-              <div class="box-header">
-                <app-button
-                  theme="main"
-                  type="submit"
-                  :font-size="isMobile ? 14 : 16"
-                  :sides="isMobile ? 10 : 20"
-                  radius="5"
-                  height="40"
-                >
-                  <i class="fa fa-check"></i>
-                  O‘zgartirish
-                </app-button>
-              </div>
+              <app-button
+                theme="main"
+                type="submit"
+                :font-size="isMobile ? 14 : 16"
+                :sides="isMobile ? 10 : 20"
+                radius="5"
+                height="40"
+              >
+                <i class="fa fa-check"></i>
+                O‘zgartirish
+              </app-button>
             </div>
           </div>
         </form>
@@ -195,7 +193,6 @@ export default {
                 this.errorNotification(error.response.data.stir.message);
                 break;
               default:
-                // Agar hech qanday xato ma'lum bo'lmasa
                 break;
             }
           }
@@ -210,14 +207,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.box {
-  position: relative;
-  border-radius: 5px;
-  background-color: #fff;
-  border-top: 3px solid #00598f;
-  margin-bottom: 20px;
-  width: 100%;
-  padding: 20px 10px;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+.box-body {
+  padding: 20px;
 }
 </style>

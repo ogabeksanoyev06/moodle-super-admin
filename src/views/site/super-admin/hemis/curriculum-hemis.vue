@@ -388,7 +388,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background: #fff;
+  background: rgba(242, 243, 248, 1);
   border-radius: 10px;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
   min-height: 150px;
@@ -401,7 +401,7 @@ export default {
   overflow: hidden;
   margin: 0 auto;
   &:hover {
-    background-color: #00598f;
+    background-color: #008bf8;
     color: #fff;
     box-shadow: rgba(0, 89, 143, 0.2) 0px 7px 29px 0px;
     .icon {

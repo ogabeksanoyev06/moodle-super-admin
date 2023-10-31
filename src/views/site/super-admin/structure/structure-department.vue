@@ -4,14 +4,21 @@
     <div class="items" v-else>
       <div class="items-left">
         <div class="box box-default">
-          <div class="box-header">
-            <!-- <div class="grid-block-2">
+          <div class="box-header greyBg">
+            <div class="grid-block-2">
               <base-input
                 type="text"
-                vid="Nomi"
                 placeholder="Nom bo‘yicha qidirish"
+                :hideDetails="true"
               />
-            </div> -->
+              <base-select
+                type="text"
+                placeholder="Fakultetni tanlang"
+                :options-prop="faculties.results"
+                v-model="departmentTypeUpdate.faculty"
+                :hideDetails="true"
+              />
+            </div>
           </div>
           <div class="box-body">
             <div class="table-block">
@@ -40,32 +47,13 @@
                     </td>
                     <td>{{ item.status }}</td>
                     <td>
-                      <label class="switch">
-                        <input
-                          type="checkbox"
-                          @click="toggleCheckbox(i)"
-                          v-model="item.status"
-                        />
-                        <div class="slider round"></div>
-                      </label>
+                      <base-checkbox v-model="item.status" />
                     </td>
                   </tr>
                 </tbody>
               </table>
             </div>
           </div>
-        </div>
-        <div class="box-footer">
-          <Pagination
-            :count="pager?.count"
-            :page_count="pager?.page_count"
-            :current_page="pager?.current_page"
-            :next="pager?.next"
-            :previous="pager?.previous"
-            @changePage="handlePageChange"
-            @prevPage="handlePrevPage"
-            @nextPage="handleNextPage"
-          />
         </div>
       </div>
       <div class="items-right">
@@ -155,7 +143,7 @@ import { mapActions, mapGetters, mapState } from "vuex";
 import AppLoading from "@/components/shared-components/AppLoading.vue";
 import BaseInput from "@/components/shared-components/BaseInput.vue";
 import BaseSelect from "@/components/shared-components/BaseSelect.vue";
-import Pagination from "@/components/shared-components/Pagination.vue";
+import BaseCheckbox from "@/components/shared-components/BaseCheckbox.vue";
 
 export default {
   name: "structure-department",
@@ -165,7 +153,7 @@ export default {
     AppLoading,
     BaseInput,
     BaseSelect,
-    Pagination,
+    BaseCheckbox,
   },
   data() {
     return {
@@ -180,11 +168,7 @@ export default {
         name: "",
         kod: "",
       },
-      pager: {
-        count: null,
-        page_count: null,
-        current_page: 1,
-      },
+      count: null,
     };
   },
   methods: {
@@ -252,61 +236,27 @@ export default {
       this.departmentTypeUpdate.kod = "";
       this.department_id = "";
     },
-    handlePageChange(page) {
-      this.pager.current_page = page;
-      this.getDeparments({ number: this.pager.current_page });
-    },
-    handlePrevPage(page) {
-      this.pager.current_page = page - 1;
-      this.getDeparments({ number: this.pager.current_page });
-    },
-    handleNextPage(page) {
-      this.pager.current_page = page + 1;
-      this.getDeparments({ number: this.pager.current_page });
-    },
   },
   computed: {
     ...mapGetters(["faculties", "department"]),
     ...mapState([]),
   },
-  async mounted() {
-    await this.getDeparments({ number: this.pager.current_page });
-    this.pager = {
-      count: this.department?.count,
-      page_count: this.department?.page_count,
-      current_page: 1,
-    };
+  mounted() {
     this.getFaculty();
   },
-  created() {},
+  async created() {
+    await this.getDeparments();
+    this.count = this.department.count;
+  },
+  watch: {
+    count() {
+      this.getDeparments(this.count);
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-.box {
-  position: relative;
-  border-radius: 3px;
-  background: #ffffff;
-  border-top: 3px solid #40d88a;
-  margin-bottom: 20px;
-  width: 100%;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-}
-.box-footer {
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 3px;
-  border-bottom-left-radius: 3px;
-  border-top: 1px solid #f4f4f4;
-  padding: 10px;
-  background-color: #fff;
-  width: fit-content;
-}
-.box-header {
-  background-color: #f3f3f3 !important;
-  padding: 10px 0;
-}
-
 .items {
   display: flex;
   width: 100%;

@@ -74,7 +74,7 @@ ul li {
 
 /* width */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 12px;
   height: 8px;
 }
 
@@ -85,5 +85,5 @@ ul li {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #00598f;
+  background: #999;
 }

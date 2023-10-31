@@ -3,7 +3,7 @@
     <div class="logo" to="/">
       <span class="logo-lg">LMS tizimi</span>
     </div>
-    <div class="container" style="flex: 1">
+    <div style="flex: 1; padding: 0 15px">
       <nav class="navbar navbar-nav">
         <div class="sidebar-toggle" @click="toggleSidebar">
           <a><i class="fa fa-bars"></i></a>

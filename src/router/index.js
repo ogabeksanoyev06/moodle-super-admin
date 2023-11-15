@@ -210,6 +210,13 @@ const routes = [
         name: "dashboard-profile",
         component: () => import("../views/cabinet/profile.vue"),
       },
+      //
+
+      {
+        path: "/test",
+        name: "test",
+        component: () => import("../views/site/super-admin/tests/index"),
+      },
     ],
   },
 ];
